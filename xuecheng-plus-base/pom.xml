@@ -8,15 +8,18 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../xuecheng-plus-parent</relativePath>
     </parent>
-    <groupId>com.example</groupId>
+
     <artifactId>xuecheng-plus-base</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>xuecheng-plus-base</name>
     <description>xuecheng-plus-base</description>
     <properties>
         <java.version>8</java.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
