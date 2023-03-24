@@ -20,7 +20,7 @@
 
     <select id="selectTreeNodes"
             resultType="com.xuecheng.content.model.dto.CourseCategoryTreeDto">
-        with recursive  t1 as(
+        with recursive  t1  as(
             select p.* from course_category p where p.id='1'
             union  all
             select p1.* from course_category p1 inner join t1 on t1.id=p1.parentid

@@ -14,10 +14,13 @@ import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.model.po.CourseCategory;
 import com.xuecheng.content.model.po.CourseMarket;
 import com.xuecheng.content.service.CourseBaseInfoService;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Stack;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -41,6 +44,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     Page<CourseBase> courseBasePage = new Page<CourseBase>();
     courseBasePage.setCurrent(pageParams.getPageNo());
     courseBasePage.setSize(pageParams.getPageSize());
+    HashMap<String, String> ma2 = new HashMap<>();
     //查询条件
     LambdaQueryWrapper<CourseBase> lambdaQueryWrapper = new LambdaQueryWrapper<>();
     lambdaQueryWrapper.like(StringUtils.isNotBlank(queryCourseParamsDto.getCourseName()),
@@ -56,7 +60,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
   }
 
   @Override
-  @Transactional()
+  @Transactional
   public CourseBaseInfoDto createCourseBase(Long compangId, AddCourseDto addCourseDto) {
     if (StringUtils.isBlank(addCourseDto.getName())) {
       throw new RuntimeException("课程名称为空");
@@ -76,51 +80,55 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     if (StringUtils.isBlank(addCourseDto.getCharge())) {
       throw new RuntimeException("收费规则为空");
     }
-    CourseBase  courseBaseNew=new CourseBase();
-    BeanUtils.copyProperties(addCourseDto,courseBaseNew);
+    CourseBase courseBaseNew = new CourseBase();
+    if (compangId != null && compangId != 0) {
+      courseBaseNew.setCompanyId(compangId);
+    }
+    BeanUtils.copyProperties(addCourseDto, courseBaseNew);
     courseBaseNew.setAuditStatus("202002");
     courseBaseNew.setStatus("203001");
     courseBaseNew.setCreateDate(LocalDateTime.now());
-    int insert0=courseBaseMapper.insert(courseBaseNew);
+    int insert0 = courseBaseMapper.insert(courseBaseNew);
     Long courseId = courseBaseNew.getId();
-    Stack<Integer> stack=new Stack<>();
+    Stack<Integer> stack = new Stack<>();
 
     //插入到课程营销信息表
-    CourseMarket courseMarketNew=new CourseMarket();
+    CourseMarket courseMarketNew = new CourseMarket();
     String charge = addCourseDto.getCharge();
-    if("201001".equals(charge)){
+    if ("201001".equals(charge)) {
       BigDecimal price = addCourseDto.getPrice();
-      if(ObjectUtils.isEmpty(price)){
+      if (ObjectUtils.isEmpty(price)) {
         throw new RuntimeException("收费课程价格不能为空");
       }
     }
-    BeanUtils.copyProperties(addCourseDto,courseMarketNew);
+    BeanUtils.copyProperties(addCourseDto, courseMarketNew);
+    courseMarketNew.setId(courseId);
     courseMarketNew.setPrice(addCourseDto.getPrice().floatValue());
     courseMarketNew.setOriginalPrice(addCourseDto.getOriginalPrice().floatValue());
-    int insert1=courseMarketMapper.insert(courseMarketNew);
-    if(insert0<=0||insert1<=0){
+    int insert1 = courseMarketMapper.insert(courseMarketNew);
+    if (insert0 <= 0 || insert1 <= 0) {
       throw new RuntimeException("新增课程基本信息失效");
     }
-    return null;
+    return getCourseBaseInfo(courseId);
   }
 
   @Override
   public CourseBaseInfoDto getCourseBaseInfo(Long courseId) {
     CourseBase courseBase = courseBaseMapper.selectById(courseId);
     CourseMarket courseMarket = courseMarketMapper.selectById(courseId);
-    if(courseBase==null){
+    if (courseBase == null) {
       return null;
     }
     CourseBaseInfoDto courseBaseInfoDto = new CourseBaseInfoDto();
-    BeanUtils.copyProperties(courseBase,courseBaseInfoDto);
-    if(courseMarket!=null){
-      BeanUtils.copyProperties(courseMarket,courseBaseInfoDto);
+    BeanUtils.copyProperties(courseBase, courseBaseInfoDto);
+    if (courseMarket != null) {
+      BeanUtils.copyProperties(courseMarket, courseBaseInfoDto);
     }
     //查询分类对应的中文名称
     CourseCategory courseCategoryBySt = courseCategoryMapper.selectById(courseBase.getSt());
     CourseCategory courseCategoryByMt = courseCategoryMapper.selectById(courseBase.getMt());
     courseBaseInfoDto.setStName(courseCategoryBySt.getName());
-    courseBaseInfoDto.setMtName(courseBaseInfoDto.getMtName());
+    courseBaseInfoDto.setMtName(courseCategoryByMt.getName());
     return courseBaseInfoDto;
   }
 }
