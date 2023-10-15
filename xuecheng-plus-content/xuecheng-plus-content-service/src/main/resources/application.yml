@@ -3,7 +3,7 @@ spring:
     name: content-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.2.111:3306/xc402_content?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://192.168.2.103:3306/xc402_content?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: mysql
 # 日志文件配置路径
