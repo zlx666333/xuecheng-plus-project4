@@ -31,6 +31,7 @@ public class DictionaryController  {
 
     @GetMapping("/dictionary/code/{code}")
     public Dictionary getByCode(@PathVariable String code) {
+        System.out.println("1");
         return dictionaryService.getByCode(code);
     }
 }
