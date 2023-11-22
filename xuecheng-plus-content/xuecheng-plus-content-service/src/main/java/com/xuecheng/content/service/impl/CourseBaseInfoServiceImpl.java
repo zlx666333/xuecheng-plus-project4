@@ -2,6 +2,7 @@ package com.xuecheng.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xuecheng.base.execption.XueChengPlusException;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.mapper.CourseBaseMapper;
@@ -14,19 +15,17 @@ import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.model.po.CourseCategory;
 import com.xuecheng.content.model.po.CourseMarket;
 import com.xuecheng.content.service.CourseBaseInfoService;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Stack;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Stack;
 
 @Service
 public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
@@ -63,22 +62,22 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
   @Transactional
   public CourseBaseInfoDto createCourseBase(Long compangId, AddCourseDto addCourseDto) {
     if (StringUtils.isBlank(addCourseDto.getName())) {
-      throw new RuntimeException("课程名称为空");
+      throw new XueChengPlusException("课程名称为空");
     }
     if (StringUtils.isBlank(addCourseDto.getMt())) {
-      throw new RuntimeException("课程分类为空");
+      throw new XueChengPlusException("课程分类为空");
     }
     if (StringUtils.isBlank(addCourseDto.getGrade())) {
-      throw new RuntimeException("课程等级为空");
+      throw new XueChengPlusException("课程等级为空");
     }
     if (StringUtils.isBlank(addCourseDto.getTeachmode())) {
-      throw new RuntimeException("教育模式为空");
+      throw new XueChengPlusException("教育模式为空");
     }
     if (StringUtils.isBlank(addCourseDto.getUsers())) {
-      throw new RuntimeException("适应人群为空");
+      throw new XueChengPlusException("适应人群为空");
     }
     if (StringUtils.isBlank(addCourseDto.getCharge())) {
-      throw new RuntimeException("收费规则为空");
+      throw new XueChengPlusException("收费规则为空");
     }
     CourseBase courseBaseNew = new CourseBase();
     if (compangId != null && compangId != 0) {
@@ -98,7 +97,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     if ("201001".equals(charge)) {
       BigDecimal price = addCourseDto.getPrice();
       if (ObjectUtils.isEmpty(price)) {
-        throw new RuntimeException("收费课程价格不能为空");
+        throw new XueChengPlusException("收费课程价格不能为空");
       }
     }
     BeanUtils.copyProperties(addCourseDto, courseMarketNew);
@@ -107,7 +106,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     courseMarketNew.setOriginalPrice(addCourseDto.getOriginalPrice().floatValue());
     int insert1 = courseMarketMapper.insert(courseMarketNew);
     if (insert0 <= 0 || insert1 <= 0) {
-      throw new RuntimeException("新增课程基本信息失效");
+      throw new XueChengPlusException("新增课程基本信息失效");
     }
     return getCourseBaseInfo(courseId);
   }

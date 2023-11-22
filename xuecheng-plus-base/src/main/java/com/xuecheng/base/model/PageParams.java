@@ -3,7 +3,6 @@ package com.xuecheng.base.model;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
-import lombok.extern.java.Log;
 
 /**
  * auther zlx
@@ -33,6 +32,7 @@ public class PageParams {
         this.pageNo = pageNo;
         this.pageSize = pageSize;
     }
+    // TODO: 2023/11/11  
 
 
 
