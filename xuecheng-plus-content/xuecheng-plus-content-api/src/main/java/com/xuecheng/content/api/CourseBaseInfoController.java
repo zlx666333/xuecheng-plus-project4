@@ -28,6 +28,7 @@ public class CourseBaseInfoController {
   @PostMapping("/course/list")
   public PageResult<CourseBase> list( PageParams pageParams,
       @RequestBody QueryCourseParamsDto queryCourseParamsDto) {
+    System.out.println("lehoole");
     return courseBaseInfoService.queryCourseBaseList(queryCourseParamsDto, pageParams);
   }
   @ApiOperation("课程增加接口")

@@ -27,7 +27,8 @@ target/
 /.nb-gradle/
 build/
 logs/
-.idea
+.idea/
+**/.idea/
 
 ### VS Code ###
 .vscode/
