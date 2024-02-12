@@ -1,7 +1,6 @@
 package com.xuecheng.content.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import com.xuecheng.content.model.dto.CourseCategoryTreeDto;
 import com.xuecheng.content.model.po.CourseCategory;
 import java.util.List;
