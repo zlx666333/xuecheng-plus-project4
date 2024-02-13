@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,7 +49,7 @@ public class CourseBaseInfoController {
     }
 
     @ApiOperation("课程信息修改")
-    @PostMapping("/course")
+    @PutMapping("/course")
     public CourseBaseInfoDto modifyCourseBaseInfo(@RequestBody @Validated EditCourseDto editCourseDto) {
         Long companyId = 1232141425L;
         return courseBaseInfoService.updataCourseBase(companyId,editCourseDto);
